@@ -5,7 +5,7 @@ import boto3
 from botocore.exceptions import ClientError
 
 if len(sys.argv) < 2:
-    exit("Por favor proveer los parametros necesarios: tipo_check \nDetalles:\ntipo_check=(Resumen, 1-15)\n")
+    exit("Por favor proveer los parametros necesarios: tipo_check \nDetalles:\ntipo_check=(Resumen, listar_buckets_s3, listar_s3_buckets_publicos, listar_sg_puerto_3389, listar_sg_puerto_22, listar_sg_puerto_80, listar_sg_puerto_443, listar_instancias_ec2, listar_instancias_db, listar_dbs_no_encrypted, listar_usuarios_iam, listar_usuarios_iam_full_admin, listar_usuarios_iam_root, listar_usuarios_iam_mfa_deshabilitado, listar_s3_buckets_no_encrypted)\n")
 
 tipo_check = sys.argv[1]
 
@@ -518,35 +518,35 @@ def generar_reporte_resumen_aws():
 try:
     if(tipo_check == 'Resumen'):
         generar_reporte_resumen_aws()
-    if(tipo_check == '1'):
+    if(tipo_check == 'listar_buckets_s3'):
         listar_buckets_s3_check_1()
-    if(tipo_check == '2'):
+    if(tipo_check == 'listar_s3_buckets_publicos'):
         listar_s3_buckets_publicos_check_2()
-    if(tipo_check == '3'):
+    if(tipo_check == 'listar_sg_all_allow'):
         listar_sg_all_allow_check_3()
-    if(tipo_check == '4'):
+    if(tipo_check == 'listar_sg_puerto_3389'):
         listar_sg_puerto_3389_check_4()
-    if(tipo_check == '5'):
+    if(tipo_check == 'listar_sg_puerto_22'):
         listar_sg_puerto_22_check_5()
-    if(tipo_check == '6'):
+    if(tipo_check == 'listar_sg_puerto_80'):
         listar_sg_puerto_80_check_6()
-    if(tipo_check == '7'):
+    if(tipo_check == 'listar_sg_puerto_443'):
         listar_sg_puerto_443_check_7()
-    if(tipo_check == '8'):
+    if(tipo_check == 'listar_instancias_ec2'):
         listar_instancias_ec2_check_8()
-    if(tipo_check == '9'):
+    if(tipo_check == 'listar_instancias_db'):
         listar_instancias_db_check_9()
-    if(tipo_check == '10'):
+    if(tipo_check == 'listar_dbs_no_encrypted'):
         listar_dbs_no_encrypted_check_10() 
-    if(tipo_check == '11'):
+    if(tipo_check == 'listar_usuarios_iam'):
         listar_usuarios_iam_check_11()
-    if(tipo_check == '12'):
+    if(tipo_check == 'listar_usuarios_iam_full_admin'):
         listar_usuarios_iam_full_admin_check_12()
-    if(tipo_check == '13'):
+    if(tipo_check == 'listar_usuarios_iam_root'):
         listar_usuarios_iam_root_check_13()
-    if(tipo_check == '14'):
+    if(tipo_check == 'listar_usuarios_iam_mfa_deshabilitado'):
         listar_usuarios_iam_mfa_deshabilitado_check_14()
-    if(tipo_check == '15'):
+    if(tipo_check == 'listar_s3_buckets_no_encrypted'):
         listar_s3_buckets_no_encrypted_check_15()
     print('Reporte Generado.\n')
 except ClientError as e:
