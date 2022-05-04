@@ -1,7 +1,6 @@
 import sys
 import json
 import boto3
-#from fpdf import FPDF
 from botocore.exceptions import ClientError
 
 if len(sys.argv) < 2:
