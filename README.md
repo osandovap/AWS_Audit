@@ -13,7 +13,7 @@ IAM
 S3
 DB
 
-# Como generar reportes:
+# Generar reportes:
 Utilizando las siguiente instrucciones se obtienen diferentes reportes:
 
 generar_reporte_resumen_aws --> Reporte Completo
