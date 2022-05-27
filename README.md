@@ -4,7 +4,7 @@ Auditar Servicios AWS
 
 Inicio rápido
 
-A través del siguiente código, se puede obtener información de algunos servicios configurados en AWS, se puede ejecutar a traves de SSH utilizando un usuario que tenga permisos de auditoria en el ambiente AWS.
+A través del siguiente código, se puede obtener información de algunos servicios configurados en AWS, para ejecutarlo utilizamos Python, una conexión SSH y un usuario que tenga permisos de auditoria en el ambiente AWS.
 
 # El código esta creado para los siguientes servicios:
 EC2
