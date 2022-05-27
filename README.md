@@ -3,7 +3,7 @@ Auditar Servicios AWS
 
 
 Inicio rápido
-Instalación
+
 A través del siguiente código, se puede obtener información de servicios configurados en AWS. se puede ejecutar a traves de ssh con un usuario que tenga permisos 
 de auditoria en el ambiente AWS a auditar.
 
