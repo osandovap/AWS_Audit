@@ -53,12 +53,14 @@ boto3
 VSC
 AWS
 
-Actualmente, solo se permite obtener información de los servicios mencionados anteriormente. Proporcionaremos nuevo codigo para otros servicios de AWS en el futuro.
+Actualmente, solo se permite obtener información de los servicios mencionados anteriormente. Proporcionaremos nuevo código para otros servicios de AWS en el futuro.
 
 Licencia
-Para el uso de esta licencia solo deben mencionar al creador del cdigo (Orlando Sandoval).
+
+Para el uso de esta licencia solo deben mencionar al creador del código (Orlando Sandoval).
 
 contribuyendo
+
 ¡Gracias por tu interés en contribuir con el proyecto! Consulte las pautas de contribución para obtener más información.
 
 © 2022 GitHub, Inc.
