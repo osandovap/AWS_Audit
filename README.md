@@ -5,9 +5,7 @@ Auditar Servicios AWS
 Inicio rápido
 Instalación
 A través del siguiente código, se puede obtener información de servicios configurados en AWS. se puede ejecutar a traves de ssh con un usuario que tenga permisos 
-de auditoria en el ambiente aws a auditar.
-
-Use Python y Boto3.
+de auditoria en el ambiente AWS a auditar.
 
 # El código esta creado para los siguientes servicios:
 EC2
@@ -16,7 +14,7 @@ S3
 DB
 
 # Como generar reportes:
-Utilizando las siguiente istrucciones se obtienen diferentes reportes:
+Utilizando las siguiente instrucciones se obtienen diferentes reportes:
 
 generar_reporte_resumen_aws --> Reporte Completo
 
