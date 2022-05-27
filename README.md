@@ -5,6 +5,7 @@ Auditar Servicios AWS
 # Inicio rápido
 
 El objetivo principal en esta auditoría de seguridad es obtener información en cada uno de los servicios configurados en AWS.
+Identificando así las brechas de seguridad y lograr securizar los entornos cloud de AWS.
 
 A través del siguiente código, se puede obtener información de estos mismos servicios, para ejecutarlo utilizamos Python, una conexión SSH y un usuario que tenga permisos de auditoria en el ambiente AWS.
 
