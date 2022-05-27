@@ -2,9 +2,11 @@
 Auditar Servicios AWS
 
 
-Inicio rápido
+# Inicio rápido
 
-A través del siguiente código, se puede obtener información de algunos servicios configurados en AWS, para ejecutarlo utilizamos Python, una conexión SSH y un usuario que tenga permisos de auditoria en el ambiente AWS.
+El objetivo principal en esta auditoría de seguridad es obtener información en cada uno de los servicios configurados en AWS.
+
+A través del siguiente código, se puede obtener información de estos mismos servicios, para ejecutarlo utilizamos Python, una conexión SSH y un usuario que tenga permisos de auditoria en el ambiente AWS.
 
 # El código esta creado para los siguientes servicios:
 EC2
