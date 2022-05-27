@@ -1,0 +1,612 @@
+import sys    # importar libreria del sistema operativo
+import json    # importar libreria para manejo de json
+import boto3    # importar libreria para manejo de servicios AWS
+from botocore.exceptions import ClientError    # importar libreria 
+
+if len(sys.argv)  2    # Valida si se envian menos parametros que los necesarios
+    exit(Por favor proveer los parametros necesarios tipo_check nDetallesntipo_check=(Cantidades, Resumen, Todos, 1-15)n)    # imprime en consola el mensaje de error indicando que faltan parametros para operar correctamente
+
+tipo_check = sys.argv[1]    # se captura el segundo parametro enviado y se almacena en la variable tipo_check. (El primer parametro es la posicion cero y el segundo parametro es la posicion uno)
+
+ec2 = boto3.client('ec2')    # creamos un objeto cliente de conección al servicio EC2
+iam = boto3.client('iam')    # creamos un objeto cliente de conección al servicio 
+s3 = boto3.client('s3')    # creamos un objeto cliente de conección al servicio 
+rds = boto3.client('rds')    # creamos un objeto cliente de conección al servicio 
+
+path_reporte = Usersnelson.ariasDownloadsReporte_audit.txt    # definimos el path donde almacenar el reporte en txt y lo almacenamos en la variable path_reporte
+path_json = Usersnelson.ariasDownloadsReporte_audit.json    # definimos el path donde almacenar el reporte en json y lo almacenamos en la variable path_json
+
+def generar_json(data)    # definimos función para escribir el json de resultados
+    with open(path_json, 'w') as file    # abrimos el archivo json en modo write (modo escritura)
+        #json.dump(data, file, indent=4, sort_keys=True, default=str)    # convertimos los resultados de la variable data en formato json con identacion de 4 espacios. Esta linea se puede utilizar en linea siguiente
+        s3.put_object(Body=json.dumps(data, indent=4, sort_keys=True, default=str), Bucket='osptfmaudit', Key='Reporte_audit.json')    # enviamos el json y lo almacenamos en un archivo llamado Reporte_audit.json en el bucket S3 llamado osptfmaudit
+
+def listar_buckets_s3_check_1()    # check_1 definimos función para listar buckets S3
+    with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 1 - Consultando lista de buckets S3..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (listar S3 Buckets) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = s3.list_buckets()    # Obtenemos lista de buckets y lo alacenamos en la variable response
+        f.write('nS3 BUCKETS LISTn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['S3Buckets'] = []    # En la variable data asignamos un item llamado S3Buckets de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for bucket in response['Buckets']    # Ciclo for para recorrer todos los items del item 'Buckets' de la variable response  
+            cont += 1    #  Le adicionamos una unidad al contador
+            f.write(bucket['Name']+'n')    # Escribimos en el archivo el nombre del bucket
+            data['S3Buckets'].append({'BucketName'  bucket['Name']})    # Adicionamos el nombre del bucket al item S3Buckets de la variable data 
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def listar_s3_buckets_publicos_check_2()    # check_2 definimos función para listar buckets S3 publicos
+    with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 2 - Consultando lista de buckets S3 Publicos..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (listar S3 Buckets Publicos) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = s3.list_buckets()    # Obtenemos lista de buckets y lo alacenamos en la variable response
+        f.write('nS3 BUCKETS LISTn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['S3Buckets'] = []    # En la variable data asignamos un item llamado S3Buckets de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for bucket in response['Buckets']    # Ciclo for para recorrer todos los items del item 'Buckets' de la variable response  
+            response1 = s3.get_public_access_block(Bucket=bucket['Name'])    # Obtenemos el valor de acceso publico asignado al bucket
+            if (str(response1['PublicAccessBlockConfiguration']['BlockPublicAcls'])=='False' and str(response1['PublicAccessBlockConfiguration']['BlockPublicPolicy'])=='False')    # 
+                cont += 1    #  Le adicionamos una unidad al contador
+                f.write(str(bucket['Name'])+'n')    # Escribimos en el archivo el nombre del bucket
+                data['S3Buckets'].append({'BucketName'  bucket['Name']})    # Adicionamos el nombre del bucket al item S3Buckets de la variable data 
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def listar_sg_all_allow_check_3()    # check_3 definimos función para listar grupos de seguridad con permisos all_allow
+    with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 3 - Security Groups Check todos los puertos abiertos..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (SECURITY GROUPS - TODO EL TRAFICO ABIERTO) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = ec2.describe_security_groups()    # Obtenemos lista grupos de seguridad para EC2 y lo alacenamos en la variable response
+        f.write('nEC2 SECURITY GROUPSn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['SecurityGroups'] = []    #  En la variable data asignamos un item llamado SecurityGroups de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for sec_group in response['SecurityGroups']    # Ciclo for para recorrer todos los items del item 'SecurityGroups' de la variable response
+            for ippermissions in sec_group['IpPermissions']    # Ciclo for para recorrer todos los items del item 'IpPermissions' de la variable sec_group
+                if (ippermissions['IpProtocol']=='-1' or sec_group['GroupName']=='default')    # Si el valor de 'IpProtocol' es igual a -1 o si el valor de 'GroupName' es default entonces ingresamos Si el valor de 'IpProtocol' es igual a -1 o si el valor de 'GroupName' es default entonces ingresamos
+                    cont += 1    #  Le adicionamos una unidad al contador
+                    f.write(str(sec_group)+'n')    # Escribimos en el archivo el valor de sec_group
+                    data['SecurityGroups'].append({'Group'  sec_group})    # Adicionamos el nombre del grupo de seguridad  al item SecurityGroups de la variable data 
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def listar_sg_puerto_3389_check_4()    # check_4 definimos función para listar grupos de seguridad con permisos en puerto 3389
+    with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 4 - Consultando Security Groups con puerto 3389 abierto..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (SECURITY GROUPS - PUERTO 3389 ABIERTO) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = ec2.describe_security_groups()    # Obtenemos lista grupos de seguridad para EC2 y lo alacenamos en la variable response
+        f.write('nEC2 SECURITY GROUPSn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['SecurityGroups'] = []    #  En la variable data asignamos un item llamado SecurityGroups de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for sec_group in response['SecurityGroups']    # Ciclo for para recorrer todos los items del item 'SecurityGroups' de la variable response
+            for ippermissions in sec_group['IpPermissions']    # Ciclo for para recorrer todos los items del item 'IpPermissions' de la variable sec_group
+                if 'FromPort' in ippermissions    # Si la variable lista ippermissions tiene un valor igual a 'FromPort' entonces ingresamos
+                    if(str(ippermissions['FromPort'])=='3389' and str(ippermissions['ToPort'])=='3389')    #  Si la variable lista ippermissions en el item 'FromPort' tiene un valor igual a 3389 y en el item 'ToPort' tiene un valor igual a 3389 entonces ingresamos
+                        cont += 1    #  Le adicionamos una unidad al contador
+                        f.write(str(sec_group)+'n')    # Escribimos en el archivo el valor de sec_group
+                        data['SecurityGroups'].append({'Group'  sec_group})    # Adicionamos el nombre del grupo de seguridad  al item SecurityGroups de la variable data 
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def listar_sg_puerto_22_check_5()    # check_5 definimos función para listar grupos de seguridad con permisos en puerto 22
+    with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 5 - Consultando Security Groups con puerto 22 abierto..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (SECURITY GROUPS - PUERTO 22 ABIERTO) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = ec2.describe_security_groups()    # Obtenemos lista grupos de seguridad para EC2 y lo alacenamos en la variable response
+        f.write('nEC2 SECURITY GROUPSn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['SecurityGroups'] = []    #  En la variable data asignamos un item llamado SecurityGroups de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for sec_group in response['SecurityGroups']    # Ciclo for para recorrer todos los items del item 'SecurityGroups' de la variable response
+            for ippermissions in sec_group['IpPermissions']    # Ciclo for para recorrer todos los items del item 'IpPermissions' de la variable sec_group
+                if 'FromPort' in ippermissions    # Si la variable lista ippermissions tiene un valor igual a 'FromPort' entonces ingresamos
+                    if(str(ippermissions['FromPort'])=='22' and str(ippermissions['ToPort'])=='22')    #  Si la variable lista ippermissions en el item 'FromPort' tiene un valor igual a 22 y en el item 'ToPort' tiene un valor igual a 22 entonces ingresamos
+                        cont += 1    #  Le adicionamos una unidad al contador
+                        f.write(str(sec_group)+'n')    # Escribimos en el archivo el valor de sec_group
+                        data['SecurityGroups'].append({'Group'  sec_group})    # Adicionamos el nombre del grupo de seguridad  al item SecurityGroups de la variable data 
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def listar_sg_puerto_80_check_6()    # check_6 definimos función para listar grupos de seguridad con permisos en puerto 80
+    with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 6 - Consultando Security Groups con puerto 80 abierto..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (SECURITY GROUPS - PUERTO 80 ABIERTO) --------------------------------------------n')    # v
+        response = ec2.describe_security_groups()    # Obtenemos lista grupos de seguridad para EC2 y lo alacenamos en la variable response
+        f.write('nEC2 SECURITY GROUPSn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['SecurityGroups'] = []    #  En la variable data asignamos un item llamado SecurityGroups de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for sec_group in response['SecurityGroups']    # Ciclo for para recorrer todos los items del item 'SecurityGroups' de la variable response
+            for ippermissions in sec_group['IpPermissions']    # Ciclo for para recorrer todos los items del item 'IpPermissions' de la variable sec_group
+                if 'FromPort' in ippermissions    # Si la variable lista ippermissions tiene un valor igual a 'FromPort' entonces ingresamos
+                    if(str(ippermissions['FromPort'])=='80' and str(ippermissions['ToPort'])=='22')    #  Si la variable lista ippermissions en el item 'FromPort' tiene un valor igual a 80 y en el item 'ToPort' tiene un valor igual a 22 entonces ingresamos
+                        cont += 1    #  Le adicionamos una unidad al contador
+                        f.write(str(sec_group)+'n')    # Escribimos en el archivo el valor de sec_group
+                        data['SecurityGroups'].append({'Group'  sec_group})    # Adicionamos el nombre del grupo de seguridad  al item SecurityGroups de la variable data 
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def listar_sg_puerto_443_check_7()    # check_7 definimos función para listar grupos de seguridad con permisos en puerto 443
+    with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 7 - Consultando Security Groups con puerto 443 abierto..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (SECURITY GROUPS - PUERTO 443 ABIERTO) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = ec2.describe_security_groups()    # Obtenemos lista grupos de seguridad para EC2 y lo alacenamos en la variable response
+        f.write('nEC2 SECURITY GROUPSn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['SecurityGroups'] = []    #  En la variable data asignamos un item llamado SecurityGroups de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for sec_group in response['SecurityGroups']    # Ciclo for para recorrer todos los items del item 'SecurityGroups' de la variable response
+            for ippermissions in sec_group['IpPermissions']    # Ciclo for para recorrer todos los items del item 'IpPermissions' de la variable sec_group
+                if 'FromPort' in ippermissions    # Si la variable lista ippermissions tiene un valor igual a 'FromPort' entonces ingresamos
+                    if(str(ippermissions['FromPort'])=='443' and str(ippermissions['ToPort'])=='443')    # Si la variable lista ippermissions en el item 'FromPort' tiene un valor igual a 443 y en el item 'ToPort' tiene un valor igual a 443 entonces ingresamos
+                        cont += 1    #  Le adicionamos una unidad al contador
+                        f.write(str(sec_group)+'n')    # Escribimos en el archivo el valor de sec_group
+                        data['SecurityGroups'].append({'Group'  sec_group})    # Adicionamos el nombre del grupo de seguridad  al item SecurityGroups de la variable data 
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def listar_instancias_ec2_check_8()    # check_8 definimos función para listar instancias EC2
+    with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 8 - Consultando instancias EC2..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (Listar Instancias EC2) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = ec2.describe_instances()    # Obtenemos lista instancias EC2 y lo alacenamos en la variable response
+        f.write('nEC2 listar instanciasn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['EC2Instances'] = []    # En la variable data asignamos un item llamado EC2Instances de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for reservation in response['Reservations']    # Ciclo for para recorrer todos los items del item 'Reservations' de la variable response
+            for instance in reservation['Instances']    # Ciclo for para recorrer todos los items del item 'Instances' de la variable reservation
+                cont += 1    #  Le adicionamos una unidad al contador
+                f.write(str(instance)+'n')    # Escribimos en el archivo el valor de instance
+                data['EC2Instances'].append({'Instances'  instance})    # Adicionamos el nombre de la instancia EC2 al item EC2Instances de la variable data 
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def listar_instancias_db_check_9()    # check_9 definimos función para listar bases de datos RDS
+     with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 9 - Consultando DBS..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (Listar Bases de datos) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = rds.describe_db_instances()    # Obtenemos lista de bases de datos RDS y lo alacenamos en la variable response
+        f.write('nRDS describir dbn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['RDSInstances'] = []    #  En la variable data asignamos un item llamado RDSInstances de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for database in response['DBInstances']    # Ciclo for para recorrer todos los items del item 'DBInstances' de la variable response
+            cont += 1    #  Le adicionamos una unidad al contador
+            f.write(str(database['DBInstanceIdentifier'])+'n')    # Escribimos en el archivo el valor de DBInstanceIdentifier de la variable lista database
+            data['RDSInstances'].append({'DBInstances'  database['DBInstanceIdentifier']})    # Adicionamos al item RDSInstances de la variable data el valor de DBInstanceIdentifier de la variable lista database
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def listar_dbs_no_encrypted_check_10()    # check_10 definimos función para listar bases de datos RDS no encriptadas
+     with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 10 - Consultando DBS no cifradas..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (Listar Bases de datos no cifradas) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = rds.describe_db_instances()    # Obtenemos lista de bases de datos RDS y lo alacenamos en la variable response
+        f.write('nRDS listar db no Cifradasn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['RDSInstances'] = []    #  En la variable data asignamos un item llamado RDSInstances de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for database in response['DBInstances']    # Ciclo for para recorrer todos los items del item 'DBInstances' de la variable response
+            if database['StorageEncrypted'] == False    # Si el item StorageEncrypted de la variable lista database tiene un valor igual a False entonces ingresamos
+                cont += 1    #  Le adicionamos una unidad al contador
+                f.write(str(database['DBInstanceIdentifier'])+'n')    # Escribimos en el archivo el valor de DBInstanceIdentifier de la variable lista database
+                data['RDSInstances'].append({'DBInstances'  database['DBInstanceIdentifier']})    # Adicionamos al item RDSInstances de la variable data el valor de DBInstanceIdentifier de la variable lista database
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def listar_usuarios_iam_check_11()    # check_11 definimos función para listar usuarios IAM con detalle de autorizaciones
+     with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 11 - Consultando usuarios IAM..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (Lista de usuarios IAM) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = iam.get_account_authorization_details(Filter=['User'])['UserDetailList']    # Obtenemos lista de usuarios IAM con detalle de autorizaciones y lo alacenamos en la variable response
+        f.write('nIAM USER DETAIL LISTn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['IAMUsers'] = []    #  En la variable data asignamos un item llamado IAMUsers de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for user_detail in response    # Ciclo for para recorrer todos los items del item 'user_detail' de la variable response
+            policyName = []    # Creamos variable llamada policyName de tipo lista
+            policyArn = []    # Creamos variable llamada policyArn de tipo lista
+            for policy in user_detail['AttachedManagedPolicies']    # Ciclo for para recorrer todos los items del item 'AttachedManagedPolicies' de la variable user_detail
+                cont +=1    # Le adicionamos una unidad al contador
+                policyName.append(policy['PolicyName'])    # Adicionamos el item PolicyName de la variable lista policy a la lista policyName
+                policyArn.append(policy['PolicyArn'])    # Adicionamos el item PolicyArn de la variable lista policy a la lista PolicyArn
+                f.write('User {0}nUserId {1}n PolicyName {2}n PolicyArn {3}n'.format(user_detail['UserName'],user_detail['UserId'],policyName,policyArn))    # 
+                data['IAMUsers'].append({'User'  user_detail})    # Adicionamos el nombre del usuario al item IAMUsers de la variable data 
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def listar_usuarios_iam_full_admin_check_12()    # check_12 definimos función para listar usuarios IAM con permisos full admin
+    with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 12 - Consultando IAM Users con Full Admin role..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (IAM USERS - FULL ADMIN ROLE) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = iam.get_account_authorization_details(Filter=['User'])['UserDetailList']    # Obtenemos lista de usuarios IAM con detalle de autorizaciones y lo alacenamos en la variable response
+        f.write('nIAM USER DETAIL LISTn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['IAMUsers'] = []    #  En la variable data asignamos un item llamado IAMUsers de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for user_detail in response    # Ciclo for para recorrer todos los items del item 'user_detail' de la variable response
+            policyName = []    # Creamos variable llamada policyName de tipo lista
+            policyArn = []    # Creamos variable llamada policyArn de tipo lista
+            for policy in user_detail['AttachedManagedPolicies']    # Ciclo for para recorrer todos los items del item 'AttachedManagedPolicies' de la variable user_detail
+                if(str(policy['PolicyName'])=='Full-Admin')    # Si el item PolicyName de la variable lista policy tiene un valor igual a 'Full-Admin' entonces ingresamos
+                    policyName.append(policy['PolicyName'])    # Adicionamos el item PolicyName de la variable lista policy a la lista policyName
+                    policyArn.append(policy['PolicyArn'])    # Adicionamos el item PolicyArn de la variable lista policy a la lista PolicyArn
+                    cont += 1    #  Le adicionamos una unidad al contador
+                    f.write('User {0}nUserId {1}n PolicyName {2}n PolicyArn {3}n'.format(user_detail['UserName'],user_detail['UserId'],policyName,policyArn))    # 
+                    data['IAMUsers'].append({'User'  user_detail})    # Adicionamos el nombre del usuario al item IAMUsers de la variable data 
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def listar_usuarios_iam_root_check_13()    # check_13 definimos función para listar usuarios IAM con permisos root
+    with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 13 - Consultando IAM Users con UserName root..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (IAM USERS - ROOT USERNAME) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = iam.get_account_authorization_details(Filter=['User'])['UserDetailList']    # Obtenemos lista de usuarios IAM con detalle de autorizaciones y lo alacenamos en la variable response
+        f.write('nIAM USER DETAIL LISTn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['IAMUsers'] = []    #  En la variable data asignamos un item llamado IAMUsers de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for user_detail in response    # Ciclo for para recorrer todos los items del item 'user_detail' de la variable response
+            policyName = []    # Creamos variable llamada policyName de tipo lista
+            policyArn = []    # Creamos variable llamada policyArn de tipo lista
+            for policy in user_detail['AttachedManagedPolicies']    # Ciclo for para recorrer todos los items del item 'AttachedManagedPolicies' de la variable user_detail
+                if(str(user_detail['UserName'])=='root')    # Si el item UserName de la variable lista user_detail tiene un valor igual a 'root' entonces ingresamos
+                    policyName.append(policy['PolicyName'])    # Adicionamos el item PolicyName de la variable lista policy a la lista policyName
+                    policyArn.append(policy['PolicyArn'])    # Adicionamos el item PolicyArn de la variable lista policy a la lista PolicyArn
+                    cont += 1    #  Le adicionamos una unidad al contador
+                    f.write('User {0}nUserId {1}n PolicyName {2}n PolicyArn {3}n'.format(user_detail['UserName'],user_detail['UserId'],policyName,policyArn))    # 
+                    data['IAMUsers'].append({'User'  user_detail})    # Adicionamos el nombre del usuario al item IAMUsers de la variable data 
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def listar_usuarios_iam_mfa_deshabilitado_check_14()    # check_14 definimos función para listar usuarios IAM con IMF deshabilitado
+    with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 14 - Consultando usuarios IAM con MFA deshabilitado..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (IAM USERS - MFA Deshabilitado) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = iam.list_users()    # Obtenemos lista de usuarios IAM y lo alacenamos en la variable response
+        f.write('nIAM USER DETAIL LISTn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['IAMUsers'] = []    #  En la variable data asignamos un item llamado IAMUsers de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for user in response['Users']    # Ciclo for para recorrer todos los items del item 'Users' de la variable response
+            userMfa = iam.list_mfa_devices(UserName=user['UserName'])    # Obtenemos el listado de dispositivos mfa para cada usuario  
+            virtualEnabled = []    # Creamos variable llamada virtualEnabled de tipo lista
+            for uname in userMfa['MFADevices']    # Ciclo for para recorrer todos los items del item 'MFADevices' de la variable userMfa
+                virtualEnabled.append(uname['UserName'])    # Adicionamos el nombre del usuario a la variable lista virtualEnabled 
+
+            if len(userMfa['MFADevices']) == 0     # Si la longitud de resultados es igual a cero, es decir no existe ningun valor en la lista entonces ingresamos
+                if user['UserName'] not in virtualEnabled    # Si el item UserName de la variable lista user no esta dentro de la lista virtualEnabled
+                    cont += 1    #  Le adicionamos una unidad al contador
+                    f.write('User {0}nUserId {1}n'.format(user['UserName'],user['UserId']))    # 
+                    data['IAMUsers'].append({'User'  user})    # Adicionamos el nombre del usuario al al item IAMUsers de la variable data 
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+                         
+def listar_s3_buckets_no_encrypted_check_15()    # check_15 definimos función para listar buckets S3 no encriptados
+    with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+        print('nCheck No 15 - Consultando lista de buckets S3 no cifrados..n')    # Imprimimos este mensaje en consola
+        f.write('-------------------------------------------- REPORTE GENERADO (listar S3 Buckets no cifrados) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+        response = s3.list_buckets()    # Obtenemos lista de buckets y lo alacenamos en la variable response
+        f.write('nS3 BUCKETS LISTn')    # Escribimos este mensaje en el reporte
+        data = {}    # Creamos variable llamada data de tipo lista
+        data['S3Buckets'] = []    # En la variable data asignamos un item llamado S3Buckets de tipo lista tambien (data es una lista de listas)
+        cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+        for bucket in response['Buckets']    # Ciclo for para recorrer todos los items del item 'Buckets' de la variable response  
+            try    # intentamos
+                response1 = s3.get_bucket_encryption(Bucket=bucket['Name'])    # Obtenemos la encripcion definida para el bucket
+            except ClientError as e    # si el intento falla entonces ejecutamos las siguientes lineas
+                cont += 1    #  Le adicionamos una unidad al contador
+                f.write(bucket['Name']+'n')     # Escribimos en el archivo el nombre del bucket
+                data['S3Buckets'].append({'BucketName'  bucket['Name']})    # Adicionamos el nombre del bucket al item S3Buckets de la variable data 
+        generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+        f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+
+def generar_reporte_resumen_aws()    # Definimos función generar el reporte resumen aws
+        with open(path_reporte, 'w') as f    # abrimos el archivo txt en modo write (modo escritura)
+            pdf = FPDF()    # Creamos un objeto llamado pdf de la clase FPDF
+            pdf.add_page()    # Adicioamos una pagina al archivo pdf
+            pdf.set_font(Arial, size = 15)    # Definimos la fuente y el tamaño de letra para el archivo pdf
+            f.write('------------------------------------------------- REPORTE GENERADO (RESUMEN) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '------------------------------------------------- REPORTE GENERADO (RESUMEN) --------------------------------------------n', ln = 1, align = 'C')    # 
+            print('nCheck No 1 - Consultando lista de buckets S3..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (listar S3 Buckets) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '-------------------------------------------- REPORTE GENERADO (listar S3 Buckets) --------------------------------------------n', ln = 1, align = 'C')    # 
+            response = s3.list_buckets()    # Obtenemos lista de buckets y lo alacenamos en la variable response
+            f.write('nS3 BUCKETS LISTn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = 'nS3 BUCKETS LISTn', ln = 1, align = 'L')    # Escribimos este texto en las celdas indicadas con aliniacion a la izquierda
+            data = {}    # Creamos variable llamada data de tipo lista
+            data['S3Buckets'] = []    # En la variable data asignamos un item llamado S3Buckets de tipo lista tambien (data es una lista de listas)
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for bucket in response['Buckets']    # Ciclo for para recorrer todos los items del item 'Buckets' de la variable response  
+                cont += 1    #  Le adicionamos una unidad al contador
+                f.write(bucket['Name']+'n')    # Escribimos en el archivo el nombre del bucket
+                pdf.cell(200, 10, txt = bucket['Name']+'n', ln = 1, align = 'L')    # Escribimos este texto en las celdas indicadas con aliniacion a la izquierda
+                data['S3Buckets'].append({'BucketName'  bucket['Name']})    # Adicionamos el nombre del bucket al item S3Buckets de la variable data 
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = 'nCantidad '+str(cont)+'n', ln = 1, align = 'L')    # Escribimos este texto en las celdas indicadas con aliniacion a la izquierda
+            print('nCheck No 2 - Consultando lista de buckets S3 Publicos..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (listar S3 Buckets Publicos) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '-------------------------------------------- REPORTE GENERADO (listar S3 Buckets Publicos) --------------------------------------------n', ln = 1, align = 'C')    # 
+            response = s3.list_buckets()    # Obtenemos lista de buckets y lo alacenamos en la variable response
+            f.write('nS3 BUCKETS LISTn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = 'nS3 BUCKETS LISTn', ln = 1, align = 'L')    # Escribimos este texto en las celdas indicadas con aliniacion a la izquierda
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for bucket in response['Buckets']    # Ciclo for para recorrer todos los items del item 'Buckets' de la variable response  
+                response1 = s3.get_public_access_block(Bucket=bucket['Name'])    # Obtenemos el valor de acceso publico asignado al bucket
+                if (str(response1['PublicAccessBlockConfiguration']['BlockPublicAcls'])=='False' and str(response1['PublicAccessBlockConfiguration']['BlockPublicPolicy'])=='False')    # 
+                    cont += 1    #  Le adicionamos una unidad al contador
+                    f.write(str(bucket['Name'])+'n')    # Escribimos en el archivo el nombre del bucket
+                    pdf.cell(200, 10, txt = str(bucket['Name'])+'n', ln = 1, align = 'L')    # Escribimos este texto en las celdas indicadas con aliniacion a la izquierda
+                    data['S3Buckets'].append({'BucketName'  bucket['Name']})    # Adicionamos el nombre del bucket al item S3Buckets de la variable data 
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = 'nCantidad '+str(cont)+'n', ln = 1, align = 'L')    # Escribimos este texto en las celdas indicadas con aliniacion a la izquierda
+            print('nCheck No 3 - Security Groups Check todos los puertos abiertos..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (SECURITY GROUPS - TODO EL TRAFICO ABIERTO) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '-------------------------------------------- REPORTE GENERADO (SECURITY GROUPS - TODO EL TRAFICO ABIERTO) --------------------------------------------n', ln = 1, align = 'C')    # 
+            response = ec2.describe_security_groups()    # Obtenemos lista grupos de seguridad para EC2 y lo alacenamos en la variable response
+            f.write('nEC2 SECURITY GROUPSn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = 'nEC2 SECURITY GROUPSn', ln = 1, align = 'L')    # Escribimos este texto en las celdas indicadas con aliniacion a la izquierda
+            data['SecurityGroups'] = []    #  En la variable data asignamos un item llamado SecurityGroups de tipo lista tambien (data es una lista de listas)
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for sec_group in response['SecurityGroups']    # Ciclo for para recorrer todos los items del item 'SecurityGroups' de la variable response
+                for ippermissions in sec_group['IpPermissions']    # Ciclo for para recorrer todos los items del item 'IpPermissions' de la variable sec_group
+                    if (ippermissions['IpProtocol']=='-1' or sec_group['GroupName']=='default')    # Si el valor de 'IpProtocol' es igual a -1 o si el valor de 'GroupName' es default entonces ingresamos 
+                        cont += 1    #  Le adicionamos una unidad al contador
+                        f.write(str(sec_group)+'n')    # Escribimos en el archivo el valor de sec_group
+                        pdf.cell(200, 10, txt = str(sec_group)+'n', ln = 1, align = 'L')    # Escribimos este texto en las celdas indicadas con aliniacion a la izquierda
+                        data['SecurityGroups'].append({'Group'  sec_group})    # Adicionamos el nombre del grupo de seguridad  al item SecurityGroups de la variable data 
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = 'nCantidad '+str(cont)+'n', ln = 1, align = 'L')    # Escribimos este texto en las celdas indicadas con aliniacion a la izquierda
+            print('nCheck No 4 - Consultando Security Groups con puerto 3389 abierto..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (SECURITY GROUPS - PUERTO 3389 ABIERTO) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '-------------------------------------------- REPORTE GENERADO (SECURITY GROUPS - PUERTO 3389 ABIERTO) --------------------------------------------n', ln = 1, align = 'C')    # 
+            response = ec2.describe_security_groups()    # Obtenemos lista grupos de seguridad para EC2 y lo alacenamos en la variable response
+            f.write('nEC2 SECURITY GROUPSn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = 'nEC2 SECURITY GROUPSn', ln = 1, align = 'L')    # Escribimos este texto en las celdas indicadas con aliniacion a la izquierda
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for sec_group in response['SecurityGroups']    # Ciclo for para recorrer todos los items del item 'SecurityGroups' de la variable response
+                for ippermissions in sec_group['IpPermissions']    # Ciclo for para recorrer todos los items del item 'IpPermissions' de la variable sec_group
+                    if 'FromPort' in ippermissions    # Si la variable lista ippermissions tiene un valor igual a 'FromPort' entonces ingresamos
+                        if(str(ippermissions['FromPort'])=='3389' and str(ippermissions['ToPort'])=='3389')    #  Si la variable lista ippermissions en el item 'FromPort' tiene un valor igual a 3389 y en el item 'ToPort' tiene un valor igual a 3389 entonces ingresamos
+                            cont += 1    #  Le adicionamos una unidad al contador
+                            f.write(str(sec_group)+'n')    # Escribimos en el archivo el valor de sec_group
+                            pdf.cell(200, 10, txt = str(sec_group)+'n', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+                            data['SecurityGroups'].append({'Group'  sec_group})    # Adicionamos el nombre del grupo de seguridad  al item SecurityGroups de la variable data 
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            print('nCheck No 5 - Consultando Security Groups con puerto 22 abierto..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (SECURITY GROUPS - PUERTO 22 ABIERTO) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            response = ec2.describe_security_groups()    # Obtenemos lista grupos de seguridad para EC2 y lo alacenamos en la variable response
+            f.write('nEC2 SECURITY GROUPSn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for sec_group in response['SecurityGroups']    # Ciclo for para recorrer todos los items del item 'SecurityGroups' de la variable response
+                for ippermissions in sec_group['IpPermissions']    # Ciclo for para recorrer todos los items del item 'IpPermissions' de la variable sec_group
+                    if 'FromPort' in ippermissions    # Si la variable lista ippermissions tiene un valor igual a 'FromPort' entonces ingresamos
+                        if(str(ippermissions['FromPort'])=='22' and str(ippermissions['ToPort'])=='22')    #  Si la variable lista ippermissions en el item 'FromPort' tiene un valor igual a 22 y en el item 'ToPort' tiene un valor igual a 22 entonces ingresamos
+                            cont += 1    #  Le adicionamos una unidad al contador
+                            f.write(str(sec_group)+'n')    # Escribimos en el archivo el valor de sec_group
+                            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+                            data['SecurityGroups'].append({'Group'  sec_group})    # Adicionamos el nombre del grupo de seguridad  al item SecurityGroups de la variable data 
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            print('nCheck No 6 - Consultando Security Groups con puerto 80 abierto..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (SECURITY GROUPS - PUERTO 80 ABIERTO) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            response = ec2.describe_security_groups()    # Obtenemos lista grupos de seguridad para EC2 y lo alacenamos en la variable response
+            f.write('nEC2 SECURITY GROUPSn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for sec_group in response['SecurityGroups']    # Ciclo for para recorrer todos los items del item 'SecurityGroups' de la variable response
+                for ippermissions in sec_group['IpPermissions']    # Ciclo for para recorrer todos los items del item 'IpPermissions' de la variable sec_group
+                    if 'FromPort' in ippermissions    # Si la variable lista ippermissions tiene un valor igual a 'FromPort' entonces ingresamos
+                        if(str(ippermissions['FromPort'])=='80' and str(ippermissions['ToPort'])=='22')    #  Si la variable lista ippermissions en el item 'FromPort' tiene un valor igual a 22 y en el item 'ToPort' tiene un valor igual a 80 entonces ingresamos
+                            cont += 1    #  Le adicionamos una unidad al contador
+                            f.write(str(sec_group)+'n')    # Escribimos en el archivo el valor de sec_group
+                            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+                            data['SecurityGroups'].append({'Group'  sec_group})    # Adicionamos el nombre del grupo de seguridad  al item SecurityGroups de la variable data 
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            print('nCheck No 7 - Consultando Security Groups con puerto 443 abierto..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (SECURITY GROUPS - PUERTO 443 ABIERTO) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            response = ec2.describe_security_groups()    # Obtenemos lista grupos de seguridad para EC2 y lo alacenamos en la variable response
+            f.write('nEC2 SECURITY GROUPSn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for sec_group in response['SecurityGroups']    # Ciclo for para recorrer todos los items del item 'SecurityGroups' de la variable response
+                for ippermissions in sec_group['IpPermissions']    # Ciclo for para recorrer todos los items del item 'IpPermissions' de la variable sec_group
+                    if 'FromPort' in ippermissions    # Si la variable lista ippermissions tiene un valor igual a 'FromPort' entonces ingresamos
+                        if(str(ippermissions['FromPort'])=='443' and str(ippermissions['ToPort'])=='443')    # Si la variable lista ippermissions en el item 'FromPort' tiene un valor igual a 443 y en el item 'ToPort' tiene un valor igual a 443 entonces ingresamos
+                            cont += 1    #  Le adicionamos una unidad al contador
+                            f.write(str(sec_group)+'n')    # Escribimos en el archivo el valor de sec_group
+                            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+                            data['SecurityGroups'].append({'Group'  sec_group})    # Adicionamos el nombre del grupo de seguridad  al item SecurityGroups de la variable data 
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            print('nCheck No 8 - Consultando instancias EC2..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (Listar Instancias EC2) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            response = ec2.describe_instances()    # Obtenemos lista instancias EC2 y lo alacenamos en la variable response
+            f.write('nEC2 listar instanciasn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            data['EC2Instances'] = []    # En la variable data asignamos un item llamado EC2Instances de tipo lista tambien (data es una lista de listas)
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for reservation in response['Reservations']    # Ciclo for para recorrer todos los items del item 'Reservations' de la variable response
+                for instance in reservation['Instances']    # Ciclo for para recorrer todos los items del item 'Instances' de la variable reservation
+                    cont += 1    #  Le adicionamos una unidad al contador
+                    f.write(str(instance)+'n')    # Escribimos en el archivo el valor de instance
+                    data['EC2Instances'].append({'Instances'  instance})    # Adicionamos el nombre de la instancia EC2 al item EC2Instances de la variable data 
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            print('nCheck No 9 - Consultando DBS..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (Listar Bases de datos) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            response = rds.describe_db_instances()    # Obtenemos lista de bases de datos RDS y lo alacenamos en la variable response
+            f.write('nRDS describir dbn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            data['RDSInstances'] = []    #  En la variable data asignamos un item llamado RDSInstances de tipo lista tambien (data es una lista de listas)
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for database in response['DBInstances']    # Ciclo for para recorrer todos los items del item 'DBInstances' de la variable response
+                cont += 1    #  Le adicionamos una unidad al contador
+                f.write(str(database['DBInstanceIdentifier'])+'n')    # Escribimos en el archivo el valor de DBInstanceIdentifier de la variable lista database
+                pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+                data['RDSInstances'].append({'DBInstances'  database['DBInstanceIdentifier']})    # Adicionamos al item RDSInstances de la variable data el valor de DBInstanceIdentifier de la variable lista database
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            print('nCheck No 10 - Consultando DBS no cifradas..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (Listar Bases de datos no cifradas) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            response = rds.describe_db_instances()    # Obtenemos lista de bases de datos RDS y lo alacenamos en la variable response
+            f.write('nRDS listar db no Cifradasn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for database in response['DBInstances']    # Ciclo for para recorrer todos los items del item 'DBInstances' de la variable response
+                if database['StorageEncrypted'] == False    # Si el item StorageEncrypted de la variable lista database tiene un valor igual a False entonces ingresamos
+                    cont += 1    #  Le adicionamos una unidad al contador
+                    f.write(str(database['DBInstanceIdentifier'])+'n')    # Escribimos en el archivo el valor de DBInstanceIdentifier de la variable lista database
+                    data['RDSInstances'].append({'DBInstances'  database['DBInstanceIdentifier']})    # Adicionamos al item RDSInstances de la variable data el valor de DBInstanceIdentifier de la variable lista database
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            print('nCheck No 11 - Consultando usuarios IAM..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (Lista de usuarios IAM) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            response = iam.get_account_authorization_details(Filter=['User'])['UserDetailList']    # Obtenemos lista de usuarios IAM con detalle de autorizaciones y lo alacenamos en la variable response
+            f.write('nIAM USER DETAIL LISTn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            data['IAMUsers'] = []    #  En la variable data asignamos un item llamado IAMUsers de tipo lista tambien (data es una lista de listas)
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for user_detail in response    # Ciclo for para recorrer todos los items del item 'user_detail' de la variable response
+                policyName = []    # Creamos variable llamada policyName de tipo lista
+                policyArn = []    # Creamos variable llamada policyArn de tipo lista
+                for policy in user_detail['AttachedManagedPolicies']    # Ciclo for para recorrer todos los items del item 'AttachedManagedPolicies' de la variable user_detail
+                    cont +=1    # Le adicionamos una unidad al contador
+                    policyName.append(policy['PolicyName'])    # Adicionamos el item PolicyName de la variable lista policy a la lista policyName
+                    policyArn.append(policy['PolicyArn'])    # Adicionamos el item PolicyArn de la variable lista policy a la lista PolicyArn
+                    f.write('User {0}nUserId {1}n PolicyName {2}n PolicyArn {3}n'.format(user_detail['UserName'],user_detail['UserId'],policyName,policyArn))    # 
+                    pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+                    data['IAMUsers'].append({'User'  user_detail})    # Adicionamos el nombre del usuario al item IAMUsers de la variable data 
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            print('nCheck No 12 - Consultando IAM Users con Full Admin role..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (IAM USERS - FULL ADMIN ROLE) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            response = iam.get_account_authorization_details(Filter=['User'])['UserDetailList']    # Obtenemos lista de usuarios IAM con detalle de autorizaciones y lo alacenamos en la variable response
+            f.write('nIAM USER DETAIL LISTn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for user_detail in response    # Ciclo for para recorrer todos los items del item 'user_detail' de la variable response
+                policyName = []    # Creamos variable llamada policyName de tipo lista
+                policyArn = []    # Creamos variable llamada policyArn de tipo lista
+                for policy in user_detail['AttachedManagedPolicies']    # Ciclo for para recorrer todos los items del item 'AttachedManagedPolicies' de la variable user_detail
+                    if(str(policy['PolicyName'])=='Full-Admin')    # Si el item PolicyName de la variable lista policy tiene un valor igual a 'Full-Admin' entonces ingresamos
+                        policyName.append(policy['PolicyName'])    # Adicionamos el item PolicyName de la variable lista policy a la lista policyName
+                        policyArn.append(policy['PolicyArn'])    # Adicionamos el item PolicyArn de la variable lista policy a la lista PolicyArn
+                        cont += 1    #  Le adicionamos una unidad al contador
+                        f.write('User {0}nUserId {1}n PolicyName {2}n PolicyArn {3}n'.format(user_detail['UserName'],user_detail['UserId'],policyName,policyArn))    # 
+                        data['IAMUsers'].append({'User'  user_detail})    # Adicionamos el nombre del usuario al item IAMUsers de la variable data 
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            print('nCheck No 13 - Consultando IAM Users con UserName root..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (IAM USERS - ROOT USERNAME) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            response = iam.get_account_authorization_details(Filter=['User'])['UserDetailList']    # Obtenemos lista de usuarios IAM con detalle de autorizaciones y lo alacenamos en la variable response
+            f.write('nIAM USER DETAIL LISTn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for user_detail in response    # Ciclo for para recorrer todos los items del item 'user_detail' de la variable response
+                policyName = []    # Creamos variable llamada policyName de tipo lista
+                policyArn = []    # Creamos variable llamada policyArn de tipo lista
+                for policy in user_detail['AttachedManagedPolicies']    # Ciclo for para recorrer todos los items del item 'AttachedManagedPolicies' de la variable user_detail
+                    if(str(user_detail['UserName'])=='root')    # Si el item UserName de la variable lista user_detail tiene un valor igual a 'root' entonces ingresamos
+                        policyName.append(policy['PolicyName'])    # Adicionamos el item PolicyName de la variable lista policy a la lista policyName
+                        policyArn.append(policy['PolicyArn'])    # Adicionamos el item PolicyArn de la variable lista policy a la lista PolicyArn
+                        cont += 1    #  Le adicionamos una unidad al contador
+                        f.write('User {0}nUserId {1}n PolicyName {2}n PolicyArn {3}n'.format(user_detail['UserName'],user_detail['UserId'],policyName,policyArn))    # 
+                        pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+                        data['IAMUsers'].append({'User'  user_detail})    # Adicionamos el nombre del usuario al item IAMUsers de la variable data 
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            print('nCheck No 14 - Consultando usuarios IAM con MFA deshabilitado..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (IAM USERS - MFA Deshabilitado) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            response = iam.list_users()    # Obtenemos lista de usuarios IAM y lo alacenamos en la variable response
+            f.write('nIAM USER DETAIL LISTn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for user in response['Users']    # Ciclo for para recorrer todos los items del item 'Users' de la variable response
+                userMfa = iam.list_mfa_devices(UserName=user['UserName'])    # Obtenemos el listado de dispositivos mfa para cada usuario  
+                virtualEnabled = []    # Creamos variable llamada virtualEnabled de tipo lista
+                for uname in userMfa['MFADevices']    # Ciclo for para recorrer todos los items del item 'MFADevices' de la variable userMfa
+                    virtualEnabled.append(uname['UserName'])    # Adicionamos el nombre del usuario a la variable lista virtualEnabled 
+
+                if len(userMfa['MFADevices']) == 0     # Si la longitud de resultados es igual a cero, es decir no existe ningun valor en la lista entonces ingresamos
+                    if user['UserName'] not in virtualEnabled    # Si el item UserName de la variable lista user no esta dentro de la lista virtualEnabled
+                        cont += 1    #  Le adicionamos una unidad al contador
+                        f.write('User {0}nUserId {1}n'.format(user['UserName'],user['UserId']))    # 
+                        pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+                        data['IAMUsers'].append({'User'  user_detail})    # Adicionamos el nombre del usuario al item IAMUsers de la variable data 
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = '', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            print('nCheck No 15 - Consultando lista de buckets S3 no cifrados..n')    # Imprimimos este mensaje en consola
+            f.write('-------------------------------------------- REPORTE GENERADO (listar S3 Buckets no cifrados) --------------------------------------------n')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = '-------------------------------------------- REPORTE GENERADO (listar S3 Buckets no cifrados) --------------------------------------------n', ln = 1, align = 'C')    # 
+            response = s3.list_buckets()    # Obtenemos lista de buckets y lo alacenamos en la variable response
+            f.write('nS3 BUCKETS LISTn')    # Escribimos este mensaje en el reporte
+            pdf.cell(200, 10, txt = 'nS3 BUCKETS LISTn', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+            cont = 0    # Creamos variable cont inicializada en valor cero para utilizar como contador 
+            for bucket in response['Buckets']    # Ciclo for para recorrer todos los items del item 'Buckets' de la variable response  
+                try    # intentamos
+                    response1 = s3.get_bucket_encryption(Bucket=bucket['Name'])    # Obtenemos la encripcion definida para el bucket
+                except ClientError as e    # Si el intento falla entonces ejecutamos las siguientes lineas
+                    cont += 1    #  Le adicionamos una unidad al contador
+                    f.write(bucket['Name']+'n')     # Escribimos en el archivo el nombre del bucket
+                    pdf.cell(200, 10, txt = bucket['Name']+'n', ln = 1, align = 'C')    # Escribimos este texto en las celdas indicadas con aliniacion a centrada
+                    data['S3Buckets'].append({'BucketName'  bucket['Name']})    # Adicionamos el nombre del bucket al item S3Buckets de la variable data 
+            f.write('nCantidad '+str(cont)+'n')    # Escribimos este mensaje en el reporte (convertimos variable numerica a texto y lo unimos al mensaje)
+            pdf.cell(200, 10, txt = 'nCantidad '+str(cont)+'n', ln = 1, align = 'L')    # Escribimos este texto en las celdas indicadas con aliniacion a la izquierda
+            generar_json(data)    # Ejecutamos la funcion generar_json y le enviamos la variable data que contiene los resultados encontrados
+            pdf.output(Reporte_audit.pdf)    # Escribimos e disco el archivo pdf con nombre Reporte_audit.pdf
+
+try    # intentamos
+    if(tipo_check == 'Resumen')    # Si la variable tipo_check contiene solamente el texto 'Resumen'
+        generar_reporte_resumen_aws()    # Ejecutamos la función correspondiente al Resumen
+    if(tipo_check == '1')    # Si la variable tipo_check contiene solamente el texto '1'
+        listar_buckets_s3_check_1()    # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '2')    # Si la variable tipo_check contiene solamente el texto '2'
+        listar_s3_buckets_publicos_check_2()    # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '3')    # Si la variable tipo_check contiene solamente el texto '3'
+        listar_sg_all_allow_check_3()    # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '4')    # Si la variable tipo_check contiene solamente el texto '4'
+        listar_sg_puerto_3389_check_4()    # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '5')    # Si la variable tipo_check contiene solamente el texto '5'
+        listar_sg_puerto_22_check_5()    # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '6')    # Si la variable tipo_check contiene solamente el texto '6'
+        listar_sg_puerto_80_check_6()    # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '7')    # Si la variable tipo_check contiene solamente el texto '7'
+        listar_sg_puerto_443_check_7()    # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '8')    # Si la variable tipo_check contiene solamente el texto '8'
+        listar_instancias_ec2_check_8()    # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '9')    # Si la variable tipo_check contiene solamente el texto '9'
+        listar_instancias_db_check_9()    # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '10')    # Si la variable tipo_check contiene solamente el texto '10'
+        listar_dbs_no_encrypted_check_10()     # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '11')    # Si la variable tipo_check contiene solamente el texto '11'
+        listar_usuarios_iam_check_11()    # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '12')    # Si la variable tipo_check contiene solamente el texto '12'
+        listar_usuarios_iam_full_admin_check_12()    # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '13')    # Si la variable tipo_check contiene solamente el texto '13'
+        listar_usuarios_iam_root_check_13()    # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '14')    # Si la variable tipo_check contiene solamente el texto '14'
+        listar_usuarios_iam_mfa_deshabilitado_check_14()    # Ejecutamos la función correspondiente a este check
+    if(tipo_check == '15')    # Si la variable tipo_check contiene solamente el texto '15'
+        listar_s3_buckets_no_encrypted_check_15()    # Ejecutamos la función correspondiente a este check
+    print('Reporte Generado.n')    # Imprimimos este mensaje en consola
+except ClientError as e    # Si falla el intento entonces ejecutamos la siguiente linea
+    print('error '+str(e))    # Imprimimos este mensaje de error en consola
