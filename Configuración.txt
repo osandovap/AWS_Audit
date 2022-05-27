@@ -13,8 +13,8 @@ iam = boto3.client('iam')    # creamos un objeto cliente de conección al servic
 s3 = boto3.client('s3')    # creamos un objeto cliente de conección al servicio 
 rds = boto3.client('rds')    # creamos un objeto cliente de conección al servicio 
 
-path_reporte = DownloadsReporte_audit.txt    # definimos el path donde almacenar el reporte en txt y lo almacenamos en la variable path_reporte
-path_json = DownloadsReporte_audit.json    # definimos el path donde almacenar el reporte en json y lo almacenamos en la variable path_json
+path_reporte = "/home/tfmaudit/Downloads/Reporte_audit.txt"    # definimos el path donde almacenar el reporte en txt y lo almacenamos en la variable path_reporte
+path_json = "/home/tfmaudit/Downloads/Reporte_audit.json"  # definimos el path donde almacenar el reporte en json y lo almacenamos en la variable path_json
 
 def generar_json(data)    # definimos función para escribir el json de resultados
     with open(path_json, 'w') as file    # abrimos el archivo json en modo write (modo escritura)
