@@ -4,6 +4,8 @@ Auditar Servicios AWS
 
 # Inicio rápido
 
+Como proyecto final de Máster, se ha creado una herramienta que permite auditar servicios de AWS, desde el cual podemos identificar aguejros de seguridad.
+
 El objetivo principal en esta auditoría de seguridad es obtener información en cada uno de los servicios configurados en AWS.
 Identificando así las brechas de seguridad y lograr securizar los entornos cloud de AWS.
 
