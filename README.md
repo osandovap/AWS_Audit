@@ -12,10 +12,7 @@ Identificando así las brechas de seguridad y lograr securizar los entornos clou
 A través del siguiente código, se puede obtener información de estos mismos servicios, para ejecutarlo utilizamos Python, una conexión SSH y un usuario que tenga permisos de auditoria en el ambiente AWS.
 
 # El código esta creado para los siguientes servicios:
-EC2
-IAM
-S3
-DB
+EC2-IAM-S3-DB
 
 # Generar reportes:
 Utilizando las siguiente instrucciones se obtienen diferentes reportes:
