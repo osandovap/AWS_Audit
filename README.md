@@ -14,8 +14,11 @@ A través del siguiente código, se puede obtener información de estos mismos s
 # El código esta creado para los siguientes servicios:
 
 •	EC2
+
 •	IAM 
+
 •	S3
+
 •	DB
 
 # Generar reportes:
