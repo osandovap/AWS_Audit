@@ -54,13 +54,16 @@ generar_reporte_resumen_aws --> Reporte Completo
 
 • listar_usuarios_iam_mfa_deshabilitado
 
-listar_s3_buckets_no_encrypted
+• listar_s3_buckets_no_encrypted
 
 # Herramientas utilizadas:
-•Python
-•boto3 
-•VSC
-•AWS
+• Python
+
+• boto3 
+
+• VSC
+
+• AWS
 
 Actualmente, solo se permite obtener información de los servicios mencionados anteriormente. Proporcionaremos nuevo código para otros servicios de AWS en el futuro.
 
