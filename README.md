@@ -22,7 +22,7 @@ A través del siguiente código, se puede obtener información de estos mismos s
 •	DB
 
 # Generar reportes:
-Utilizando las siguiente instrucciones se obtienen diferentes reportes:
+Utilizando las siguientes instrucciones se obtienen diferentes reportes:
 
 generar_reporte_resumen_aws --> Reporte Completo
 
