@@ -1,0 +1,1444 @@
+{
+    "EC2Instances": [
+        {
+            "Instances": {
+                "AmiLaunchIndex": 0,
+                "Architecture": "x86_64",
+                "BlockDeviceMappings": [
+                    {
+                        "DeviceName": "/dev/xvda",
+                        "Ebs": {
+                            "AttachTime": "2022-01-04 17:01:24+00:00",
+                            "DeleteOnTermination": true,
+                            "Status": "attached",
+                            "VolumeId": "vol-003ebff7a8606e888"
+                        }
+                    }
+                ],
+                "CapacityReservationSpecification": {
+                    "CapacityReservationPreference": "open"
+                },
+                "ClientToken": "",
+                "CpuOptions": {
+                    "CoreCount": 1,
+                    "ThreadsPerCore": 1
+                },
+                "EbsOptimized": false,
+                "EnaSupport": true,
+                "HibernationOptions": {
+                    "Configured": false
+                },
+                "Hypervisor": "xen",
+                "ImageId": "ami-0d3c032f5934e1b41",
+                "InstanceId": "i-031fc32487115ad47",
+                "InstanceType": "t2.micro",
+                "KeyName": "Socrates",
+                "LaunchTime": "2022-06-17 13:26:25+00:00",
+                "MetadataOptions": {
+                    "HttpEndpoint": "enabled",
+                    "HttpPutResponseHopLimit": 1,
+                    "HttpTokens": "optional",
+                    "State": "applied"
+                },
+                "Monitoring": {
+                    "State": "disabled"
+                },
+                "NetworkInterfaces": [
+                    {
+                        "Attachment": {
+                            "AttachTime": "2022-01-04 17:01:24+00:00",
+                            "AttachmentId": "eni-attach-0a5777c506b3bbaea",
+                            "DeleteOnTermination": true,
+                            "DeviceIndex": 0,
+                            "Status": "attached"
+                        },
+                        "Description": "",
+                        "Groups": [
+                            {
+                                "GroupId": "sg-0b5402d2ebe819d50",
+                                "GroupName": "socrates"
+                            }
+                        ],
+                        "InterfaceType": "interface",
+                        "Ipv6Addresses": [],
+                        "MacAddress": "0e:e9:5a:e5:56:46",
+                        "NetworkInterfaceId": "eni-01833a389f7473405",
+                        "OwnerId": "280112444307",
+                        "PrivateDnsName": "ip-172-31-36-86.eu-west-3.compute.internal",
+                        "PrivateIpAddress": "172.31.36.86",
+                        "PrivateIpAddresses": [
+                            {
+                                "Primary": true,
+                                "PrivateDnsName": "ip-172-31-36-86.eu-west-3.compute.internal",
+                                "PrivateIpAddress": "172.31.36.86"
+                            }
+                        ],
+                        "SourceDestCheck": true,
+                        "Status": "in-use",
+                        "SubnetId": "subnet-016d8ca74d80ae954",
+                        "VpcId": "vpc-083071119b83e5c2c"
+                    }
+                ],
+                "Placement": {
+                    "AvailabilityZone": "eu-west-3c",
+                    "GroupName": "",
+                    "Tenancy": "default"
+                },
+                "PrivateDnsName": "ip-172-31-36-86.eu-west-3.compute.internal",
+                "PrivateIpAddress": "172.31.36.86",
+                "ProductCodes": [],
+                "PublicDnsName": "",
+                "RootDeviceName": "/dev/xvda",
+                "RootDeviceType": "ebs",
+                "SecurityGroups": [
+                    {
+                        "GroupId": "sg-0b5402d2ebe819d50",
+                        "GroupName": "socrates"
+                    }
+                ],
+                "SourceDestCheck": true,
+                "State": {
+                    "Code": 80,
+                    "Name": "stopped"
+                },
+                "StateReason": {
+                    "Code": "Client.UserInitiatedShutdown",
+                    "Message": "Client.UserInitiatedShutdown: User initiated shutdown"
+                },
+                "StateTransitionReason": "User initiated (2022-06-17 15:05:35 GMT)",
+                "SubnetId": "subnet-016d8ca74d80ae954",
+                "VirtualizationType": "hvm",
+                "VpcId": "vpc-083071119b83e5c2c"
+            }
+        },
+        {
+            "Instances": {
+                "AmiLaunchIndex": 0,
+                "Architecture": "x86_64",
+                "BlockDeviceMappings": [
+                    {
+                        "DeviceName": "/dev/sda1",
+                        "Ebs": {
+                            "AttachTime": "2021-11-18 11:46:23+00:00",
+                            "DeleteOnTermination": true,
+                            "Status": "attached",
+                            "VolumeId": "vol-0ef1fb2a8e8aa1dfb"
+                        }
+                    }
+                ],
+                "CapacityReservationSpecification": {
+                    "CapacityReservationPreference": "none"
+                },
+                "ClientToken": "",
+                "CpuOptions": {
+                    "CoreCount": 1,
+                    "ThreadsPerCore": 1
+                },
+                "EbsOptimized": false,
+                "EnaSupport": true,
+                "HibernationOptions": {
+                    "Configured": false
+                },
+                "Hypervisor": "xen",
+                "ImageId": "ami-06d79c60d7454e2af",
+                "InstanceId": "i-0cd9ef52bf8cbdc6f",
+                "InstanceType": "t2.micro",
+                "KeyName": "tfmaudit1",
+                "LaunchTime": "2022-06-17 13:26:25+00:00",
+                "MetadataOptions": {
+                    "HttpEndpoint": "enabled",
+                    "HttpPutResponseHopLimit": 1,
+                    "HttpTokens": "optional",
+                    "State": "applied"
+                },
+                "Monitoring": {
+                    "State": "disabled"
+                },
+                "NetworkInterfaces": [
+                    {
+                        "Attachment": {
+                            "AttachTime": "2021-11-18 11:46:22+00:00",
+                            "AttachmentId": "eni-attach-097cb654e92546a26",
+                            "DeleteOnTermination": true,
+                            "DeviceIndex": 0,
+                            "Status": "attached"
+                        },
+                        "Description": "",
+                        "Groups": [
+                            {
+                                "GroupId": "sg-0b688f44cc56000e4",
+                                "GroupName": "tfmaudit"
+                            }
+                        ],
+                        "InterfaceType": "interface",
+                        "Ipv6Addresses": [],
+                        "MacAddress": "0a:34:3c:7c:8d:ea",
+                        "NetworkInterfaceId": "eni-00f21ecd976ce4408",
+                        "OwnerId": "280112444307",
+                        "PrivateDnsName": "ip-172-31-27-41.eu-west-3.compute.internal",
+                        "PrivateIpAddress": "172.31.27.41",
+                        "PrivateIpAddresses": [
+                            {
+                                "Primary": true,
+                                "PrivateDnsName": "ip-172-31-27-41.eu-west-3.compute.internal",
+                                "PrivateIpAddress": "172.31.27.41"
+                            }
+                        ],
+                        "SourceDestCheck": true,
+                        "Status": "in-use",
+                        "SubnetId": "subnet-0eb8b1432734a7ffa",
+                        "VpcId": "vpc-083071119b83e5c2c"
+                    }
+                ],
+                "Placement": {
+                    "AvailabilityZone": "eu-west-3b",
+                    "GroupName": "",
+                    "Tenancy": "default"
+                },
+                "PrivateDnsName": "ip-172-31-27-41.eu-west-3.compute.internal",
+                "PrivateIpAddress": "172.31.27.41",
+                "ProductCodes": [],
+                "PublicDnsName": "",
+                "RootDeviceName": "/dev/sda1",
+                "RootDeviceType": "ebs",
+                "SecurityGroups": [
+                    {
+                        "GroupId": "sg-0b688f44cc56000e4",
+                        "GroupName": "tfmaudit"
+                    }
+                ],
+                "SourceDestCheck": true,
+                "State": {
+                    "Code": 80,
+                    "Name": "stopped"
+                },
+                "StateReason": {
+                    "Code": "Client.UserInitiatedShutdown",
+                    "Message": "Client.UserInitiatedShutdown: User initiated shutdown"
+                },
+                "StateTransitionReason": "User initiated (2022-06-17 15:05:35 GMT)",
+                "SubnetId": "subnet-0eb8b1432734a7ffa",
+                "VirtualizationType": "hvm",
+                "VpcId": "vpc-083071119b83e5c2c"
+            }
+        },
+        {
+            "Instances": {
+                "AmiLaunchIndex": 0,
+                "Architecture": "x86_64",
+                "BlockDeviceMappings": [
+                    {
+                        "DeviceName": "/dev/sda1",
+                        "Ebs": {
+                            "AttachTime": "2022-02-05 16:12:54+00:00",
+                            "DeleteOnTermination": true,
+                            "Status": "attached",
+                            "VolumeId": "vol-064f8a51f89d41d37"
+                        }
+                    }
+                ],
+                "CapacityReservationSpecification": {
+                    "CapacityReservationPreference": "open"
+                },
+                "ClientToken": "",
+                "CpuOptions": {
+                    "CoreCount": 1,
+                    "ThreadsPerCore": 1
+                },
+                "EbsOptimized": false,
+                "EnaSupport": true,
+                "HibernationOptions": {
+                    "Configured": false
+                },
+                "Hypervisor": "xen",
+                "ImageId": "ami-052f10f1c45aa2155",
+                "InstanceId": "i-0ba71df4a1fec78e6",
+                "InstanceType": "t2.micro",
+                "KeyName": "Webserver",
+                "LaunchTime": "2022-06-17 13:26:25+00:00",
+                "MetadataOptions": {
+                    "HttpEndpoint": "enabled",
+                    "HttpPutResponseHopLimit": 1,
+                    "HttpTokens": "optional",
+                    "State": "applied"
+                },
+                "Monitoring": {
+                    "State": "disabled"
+                },
+                "NetworkInterfaces": [
+                    {
+                        "Attachment": {
+                            "AttachTime": "2022-02-05 16:12:53+00:00",
+                            "AttachmentId": "eni-attach-074449b7a0632ee0a",
+                            "DeleteOnTermination": true,
+                            "DeviceIndex": 0,
+                            "Status": "attached"
+                        },
+                        "Description": "",
+                        "Groups": [
+                            {
+                                "GroupId": "sg-09bba6f92f8b1ec38",
+                                "GroupName": "launch-wizard-1"
+                            }
+                        ],
+                        "InterfaceType": "interface",
+                        "Ipv6Addresses": [],
+                        "MacAddress": "06:59:1f:41:01:72",
+                        "NetworkInterfaceId": "eni-073a77207a1bc31f6",
+                        "OwnerId": "280112444307",
+                        "PrivateDnsName": "ip-172-31-11-173.eu-west-3.compute.internal",
+                        "PrivateIpAddress": "172.31.11.173",
+                        "PrivateIpAddresses": [
+                            {
+                                "Primary": true,
+                                "PrivateDnsName": "ip-172-31-11-173.eu-west-3.compute.internal",
+                                "PrivateIpAddress": "172.31.11.173"
+                            }
+                        ],
+                        "SourceDestCheck": true,
+                        "Status": "in-use",
+                        "SubnetId": "subnet-0b6b67811e50b9475",
+                        "VpcId": "vpc-083071119b83e5c2c"
+                    }
+                ],
+                "Placement": {
+                    "AvailabilityZone": "eu-west-3a",
+                    "GroupName": "",
+                    "Tenancy": "default"
+                },
+                "PrivateDnsName": "ip-172-31-11-173.eu-west-3.compute.internal",
+                "PrivateIpAddress": "172.31.11.173",
+                "ProductCodes": [],
+                "PublicDnsName": "",
+                "RootDeviceName": "/dev/sda1",
+                "RootDeviceType": "ebs",
+                "SecurityGroups": [
+                    {
+                        "GroupId": "sg-09bba6f92f8b1ec38",
+                        "GroupName": "launch-wizard-1"
+                    }
+                ],
+                "SourceDestCheck": true,
+                "State": {
+                    "Code": 80,
+                    "Name": "stopped"
+                },
+                "StateReason": {
+                    "Code": "Client.UserInitiatedShutdown",
+                    "Message": "Client.UserInitiatedShutdown: User initiated shutdown"
+                },
+                "StateTransitionReason": "User initiated (2022-06-17 15:05:35 GMT)",
+                "SubnetId": "subnet-0b6b67811e50b9475",
+                "VirtualizationType": "hvm",
+                "VpcId": "vpc-083071119b83e5c2c"
+            }
+        },
+        {
+            "Instances": {
+                "AmiLaunchIndex": 0,
+                "Architecture": "x86_64",
+                "BlockDeviceMappings": [
+                    {
+                        "DeviceName": "/dev/sda1",
+                        "Ebs": {
+                            "AttachTime": "2022-02-15 16:21:14+00:00",
+                            "DeleteOnTermination": true,
+                            "Status": "attached",
+                            "VolumeId": "vol-0c68f1ebb71bb6418"
+                        }
+                    }
+                ],
+                "CapacityReservationSpecification": {
+                    "CapacityReservationPreference": "open"
+                },
+                "ClientToken": "",
+                "CpuOptions": {
+                    "CoreCount": 1,
+                    "ThreadsPerCore": 1
+                },
+                "EbsOptimized": false,
+                "EnaSupport": true,
+                "HibernationOptions": {
+                    "Configured": false
+                },
+                "Hypervisor": "xen",
+                "ImageId": "ami-09b262cbbf653d450",
+                "InstanceId": "i-031ead1c61ff9975f",
+                "InstanceType": "t2.micro",
+                "KeyName": "winr2012",
+                "LaunchTime": "2022-06-17 13:26:25+00:00",
+                "MetadataOptions": {
+                    "HttpEndpoint": "enabled",
+                    "HttpPutResponseHopLimit": 1,
+                    "HttpTokens": "optional",
+                    "State": "applied"
+                },
+                "Monitoring": {
+                    "State": "disabled"
+                },
+                "NetworkInterfaces": [
+                    {
+                        "Attachment": {
+                            "AttachTime": "2022-02-15 16:21:13+00:00",
+                            "AttachmentId": "eni-attach-037fd2db8fd6b7898",
+                            "DeleteOnTermination": true,
+                            "DeviceIndex": 0,
+                            "Status": "attached"
+                        },
+                        "Description": "",
+                        "Groups": [
+                            {
+                                "GroupId": "sg-04021725da3861465",
+                                "GroupName": "launch-wizard-2"
+                            }
+                        ],
+                        "InterfaceType": "interface",
+                        "Ipv6Addresses": [],
+                        "MacAddress": "0e:c6:a2:db:25:6e",
+                        "NetworkInterfaceId": "eni-041693740f0e53f8b",
+                        "OwnerId": "280112444307",
+                        "PrivateDnsName": "ip-172-31-33-248.eu-west-3.compute.internal",
+                        "PrivateIpAddress": "172.31.33.248",
+                        "PrivateIpAddresses": [
+                            {
+                                "Primary": true,
+                                "PrivateDnsName": "ip-172-31-33-248.eu-west-3.compute.internal",
+                                "PrivateIpAddress": "172.31.33.248"
+                            }
+                        ],
+                        "SourceDestCheck": true,
+                        "Status": "in-use",
+                        "SubnetId": "subnet-016d8ca74d80ae954",
+                        "VpcId": "vpc-083071119b83e5c2c"
+                    }
+                ],
+                "Placement": {
+                    "AvailabilityZone": "eu-west-3c",
+                    "GroupName": "",
+                    "Tenancy": "default"
+                },
+                "Platform": "windows",
+                "PrivateDnsName": "ip-172-31-33-248.eu-west-3.compute.internal",
+                "PrivateIpAddress": "172.31.33.248",
+                "ProductCodes": [],
+                "PublicDnsName": "",
+                "RootDeviceName": "/dev/sda1",
+                "RootDeviceType": "ebs",
+                "SecurityGroups": [
+                    {
+                        "GroupId": "sg-04021725da3861465",
+                        "GroupName": "launch-wizard-2"
+                    }
+                ],
+                "SourceDestCheck": true,
+                "State": {
+                    "Code": 80,
+                    "Name": "stopped"
+                },
+                "StateReason": {
+                    "Code": "Client.UserInitiatedShutdown",
+                    "Message": "Client.UserInitiatedShutdown: User initiated shutdown"
+                },
+                "StateTransitionReason": "User initiated (2022-06-17 15:05:35 GMT)",
+                "SubnetId": "subnet-016d8ca74d80ae954",
+                "VirtualizationType": "hvm",
+                "VpcId": "vpc-083071119b83e5c2c"
+            }
+        }
+    ],
+    "IAMUsers": [
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/camila",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 17:13:44+00:00",
+                "GroupList": [
+                    "Pruebas",
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJTCXNENBCM",
+                "UserName": "camila"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/cloudtrail",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AWSCloudTrail_FullAccess",
+                        "PolicyName": "AWSCloudTrail_FullAccess"
+                    }
+                ],
+                "CreateDate": "2022-02-15 19:45:31+00:00",
+                "GroupList": [],
+                "Path": "/",
+                "Tags": [
+                    {
+                        "Key": "cloudtrail",
+                        "Value": ""
+                    }
+                ],
+                "UserId": "AIDAUCOAAWOJ6AXWFKJTA",
+                "UserName": "cloudtrail"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/dianalatiff",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess",
+                        "PolicyName": "AmazonS3ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2021-12-27 08:47:11+00:00",
+                "GroupList": [
+                    "Full-accessS3",
+                    "Pruebas"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJR7U5MO52I",
+                "UserName": "dianalatiff"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/maoarias",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                        "PolicyName": "AmazonS3FullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::280112444307:policy/Full-Admin",
+                        "PolicyName": "Full-Admin"
+                    }
+                ],
+                "CreateDate": "2021-12-19 18:43:07+00:00",
+                "GroupList": [
+                    "Full-accessS3",
+                    "TFMRead",
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJQBKPMWCSE",
+                "UserName": "maoarias"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/maoarias",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                        "PolicyName": "AmazonS3FullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::280112444307:policy/Full-Admin",
+                        "PolicyName": "Full-Admin"
+                    }
+                ],
+                "CreateDate": "2021-12-19 18:43:07+00:00",
+                "GroupList": [
+                    "Full-accessS3",
+                    "TFMRead",
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJQBKPMWCSE",
+                "UserName": "maoarias"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/Orlando",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2021-12-07 12:21:07+00:00",
+                "GroupList": [
+                    "TFMRead"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJTTP4IYYOS",
+                "UserName": "Orlando"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/osp",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                        "PolicyName": "AmazonS3FullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AdministratorAccess",
+                        "PolicyName": "AdministratorAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::280112444307:policy/Full-Admin",
+                        "PolicyName": "Full-Admin"
+                    }
+                ],
+                "CreateDate": "2021-11-25 09:30:13+00:00",
+                "GroupList": [
+                    "Full-accessS3"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJSM23V3XL5",
+                "UserName": "osp"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/osp",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                        "PolicyName": "AmazonS3FullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AdministratorAccess",
+                        "PolicyName": "AdministratorAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::280112444307:policy/Full-Admin",
+                        "PolicyName": "Full-Admin"
+                    }
+                ],
+                "CreateDate": "2021-11-25 09:30:13+00:00",
+                "GroupList": [
+                    "Full-accessS3"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJSM23V3XL5",
+                "UserName": "osp"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/osp",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                        "PolicyName": "AmazonS3FullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AdministratorAccess",
+                        "PolicyName": "AdministratorAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::280112444307:policy/Full-Admin",
+                        "PolicyName": "Full-Admin"
+                    }
+                ],
+                "CreateDate": "2021-11-25 09:30:13+00:00",
+                "GroupList": [
+                    "Full-accessS3"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJSM23V3XL5",
+                "UserName": "osp"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/root",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 17:24:52+00:00",
+                "GroupList": [
+                    "Pruebas"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJ3D6YG5QMY",
+                "UserName": "root"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/tfmaudit",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonRDSFullAccess",
+                        "PolicyName": "AmazonRDSFullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
+                        "PolicyName": "AmazonEC2FullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/IAMFullAccess",
+                        "PolicyName": "IAMFullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                        "PolicyName": "AmazonS3FullAccess"
+                    }
+                ],
+                "CreateDate": "2021-11-17 11:38:09+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJSNVRLQD6V",
+                "UserName": "tfmaudit"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/tfmaudit",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonRDSFullAccess",
+                        "PolicyName": "AmazonRDSFullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
+                        "PolicyName": "AmazonEC2FullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/IAMFullAccess",
+                        "PolicyName": "IAMFullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                        "PolicyName": "AmazonS3FullAccess"
+                    }
+                ],
+                "CreateDate": "2021-11-17 11:38:09+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJSNVRLQD6V",
+                "UserName": "tfmaudit"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/tfmaudit",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonRDSFullAccess",
+                        "PolicyName": "AmazonRDSFullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
+                        "PolicyName": "AmazonEC2FullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/IAMFullAccess",
+                        "PolicyName": "IAMFullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                        "PolicyName": "AmazonS3FullAccess"
+                    }
+                ],
+                "CreateDate": "2021-11-17 11:38:09+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJSNVRLQD6V",
+                "UserName": "tfmaudit"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/tfmaudit",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonRDSFullAccess",
+                        "PolicyName": "AmazonRDSFullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2FullAccess",
+                        "PolicyName": "AmazonEC2FullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/IAMFullAccess",
+                        "PolicyName": "IAMFullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                        "PolicyName": "AmazonS3FullAccess"
+                    }
+                ],
+                "CreateDate": "2021-11-17 11:38:09+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJSNVRLQD6V",
+                "UserName": "tfmaudit"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/violeta",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 16:44:16+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJRQKLW3WEO",
+                "UserName": "violeta"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/maoarias",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                        "PolicyName": "AmazonS3FullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::280112444307:policy/Full-Admin",
+                        "PolicyName": "Full-Admin"
+                    }
+                ],
+                "CreateDate": "2021-12-19 18:43:07+00:00",
+                "GroupList": [
+                    "Full-accessS3",
+                    "TFMRead",
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJQBKPMWCSE",
+                "UserName": "maoarias"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/osp",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+                        "PolicyName": "AmazonS3FullAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AdministratorAccess",
+                        "PolicyName": "AdministratorAccess"
+                    },
+                    {
+                        "PolicyArn": "arn:aws:iam::280112444307:policy/Full-Admin",
+                        "PolicyName": "Full-Admin"
+                    }
+                ],
+                "CreateDate": "2021-11-25 09:30:13+00:00",
+                "GroupList": [
+                    "Full-accessS3"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJSM23V3XL5",
+                "UserName": "osp"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/root",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 17:24:52+00:00",
+                "GroupList": [
+                    "Pruebas"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJ3D6YG5QMY",
+                "UserName": "root"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/violeta",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 16:44:16+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJRQKLW3WEO",
+                "UserName": "violeta"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/violeta",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 16:44:16+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJRQKLW3WEO",
+                "UserName": "violeta"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/violeta",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 16:44:16+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJRQKLW3WEO",
+                "UserName": "violeta"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/violeta",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 16:44:16+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJRQKLW3WEO",
+                "UserName": "violeta"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/violeta",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 16:44:16+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJRQKLW3WEO",
+                "UserName": "violeta"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/violeta",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 16:44:16+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJRQKLW3WEO",
+                "UserName": "violeta"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/violeta",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 16:44:16+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJRQKLW3WEO",
+                "UserName": "violeta"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/violeta",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 16:44:16+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJRQKLW3WEO",
+                "UserName": "violeta"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/violeta",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 16:44:16+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJRQKLW3WEO",
+                "UserName": "violeta"
+            }
+        },
+        {
+            "User": {
+                "Arn": "arn:aws:iam::280112444307:user/violeta",
+                "AttachedManagedPolicies": [
+                    {
+                        "PolicyArn": "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
+                        "PolicyName": "AmazonEC2ReadOnlyAccess"
+                    }
+                ],
+                "CreateDate": "2022-01-04 16:44:16+00:00",
+                "GroupList": [
+                    "Tfmaudit"
+                ],
+                "Path": "/",
+                "Tags": [],
+                "UserId": "AIDAUCOAAWOJRQKLW3WEO",
+                "UserName": "violeta"
+            }
+        }
+    ],
+    "RDSInstances": [
+        {
+            "DBInstances": "tfmaudit-db"
+        },
+        {
+            "DBInstances": "tfmaudit-db"
+        }
+    ],
+    "S3Buckets": [
+        {
+            "BucketName": "osptfmaudit"
+        },
+        {
+            "BucketName": "osptfmaudit"
+        }
+    ],
+    "SecurityGroups": [
+        {
+            "Group": {
+                "Description": "default VPC security group",
+                "GroupId": "sg-05445952484ffc457",
+                "GroupName": "default",
+                "IpPermissions": [
+                    {
+                        "IpProtocol": "-1",
+                        "IpRanges": [],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "UserIdGroupPairs": [
+                            {
+                                "GroupId": "sg-05445952484ffc457",
+                                "UserId": "280112444307"
+                            }
+                        ]
+                    }
+                ],
+                "IpPermissionsEgress": [
+                    {
+                        "IpProtocol": "-1",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "OwnerId": "280112444307",
+                "VpcId": "vpc-083071119b83e5c2c"
+            }
+        },
+        {
+            "Group": {
+                "Description": "launch-wizard-2 created 2022-02-15T17:19:33.686+01:00",
+                "GroupId": "sg-04021725da3861465",
+                "GroupName": "launch-wizard-2",
+                "IpPermissions": [
+                    {
+                        "FromPort": 3389,
+                        "IpProtocol": "tcp",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "ToPort": 3389,
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "IpPermissionsEgress": [
+                    {
+                        "IpProtocol": "-1",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "OwnerId": "280112444307",
+                "VpcId": "vpc-083071119b83e5c2c"
+            }
+        },
+        {
+            "Group": {
+                "Description": "launch-wizard-1 created 2022-02-05T17:11:58.934+01:00",
+                "GroupId": "sg-09bba6f92f8b1ec38",
+                "GroupName": "launch-wizard-1",
+                "IpPermissions": [
+                    {
+                        "FromPort": 22,
+                        "IpProtocol": "tcp",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "ToPort": 22,
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "IpPermissionsEgress": [
+                    {
+                        "IpProtocol": "-1",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "OwnerId": "280112444307",
+                "VpcId": "vpc-083071119b83e5c2c"
+            }
+        },
+        {
+            "Group": {
+                "Description": "acceso socrates",
+                "GroupId": "sg-0b5402d2ebe819d50",
+                "GroupName": "socrates",
+                "IpPermissions": [
+                    {
+                        "FromPort": 80,
+                        "IpProtocol": "tcp",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "ToPort": 80,
+                        "UserIdGroupPairs": []
+                    },
+                    {
+                        "FromPort": 22,
+                        "IpProtocol": "tcp",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0",
+                                "Description": ""
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "ToPort": 22,
+                        "UserIdGroupPairs": []
+                    },
+                    {
+                        "FromPort": 25,
+                        "IpProtocol": "tcp",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "ToPort": 25,
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "IpPermissionsEgress": [
+                    {
+                        "IpProtocol": "-1",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "OwnerId": "280112444307",
+                "VpcId": "vpc-083071119b83e5c2c"
+            }
+        },
+        {
+            "Group": {
+                "Description": "tfmaudit1",
+                "GroupId": "sg-0b688f44cc56000e4",
+                "GroupName": "tfmaudit",
+                "IpPermissions": [
+                    {
+                        "FromPort": 22,
+                        "IpProtocol": "tcp",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0",
+                                "Description": ""
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "ToPort": 22,
+                        "UserIdGroupPairs": []
+                    },
+                    {
+                        "FromPort": 443,
+                        "IpProtocol": "tcp",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "ToPort": 443,
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "IpPermissionsEgress": [
+                    {
+                        "IpProtocol": "-1",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "OwnerId": "280112444307",
+                "VpcId": "vpc-083071119b83e5c2c"
+            }
+        },
+        {
+            "Group": {
+                "Description": "acceso socrates",
+                "GroupId": "sg-0b5402d2ebe819d50",
+                "GroupName": "socrates",
+                "IpPermissions": [
+                    {
+                        "FromPort": 80,
+                        "IpProtocol": "tcp",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "ToPort": 80,
+                        "UserIdGroupPairs": []
+                    },
+                    {
+                        "FromPort": 22,
+                        "IpProtocol": "tcp",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0",
+                                "Description": ""
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "ToPort": 22,
+                        "UserIdGroupPairs": []
+                    },
+                    {
+                        "FromPort": 25,
+                        "IpProtocol": "tcp",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "ToPort": 25,
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "IpPermissionsEgress": [
+                    {
+                        "IpProtocol": "-1",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "OwnerId": "280112444307",
+                "VpcId": "vpc-083071119b83e5c2c"
+            }
+        },
+        {
+            "Group": {
+                "Description": "tfmaudit1",
+                "GroupId": "sg-0b688f44cc56000e4",
+                "GroupName": "tfmaudit",
+                "IpPermissions": [
+                    {
+                        "FromPort": 22,
+                        "IpProtocol": "tcp",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0",
+                                "Description": ""
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "ToPort": 22,
+                        "UserIdGroupPairs": []
+                    },
+                    {
+                        "FromPort": 443,
+                        "IpProtocol": "tcp",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "ToPort": 443,
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "IpPermissionsEgress": [
+                    {
+                        "IpProtocol": "-1",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "OwnerId": "280112444307",
+                "VpcId": "vpc-083071119b83e5c2c"
+            }
+        }
+    ]
+}
