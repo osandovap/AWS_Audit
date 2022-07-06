@@ -8,10 +8,10 @@ if len(sys.argv)  2    # Valida si se envian menos parametros que los necesarios
 
 tipo_check = sys.argv[1]    # se captura el segundo parametro enviado y se almacena en la variable tipo_check. (El primer parametro es la posicion cero y el segundo parametro es la posicion uno)
 
-ec2 = boto3.client('ec2')    # creamos un objeto cliente de conección al servicio EC2
-iam = boto3.client('iam')    # creamos un objeto cliente de conección al servicio 
-s3 = boto3.client('s3')    # creamos un objeto cliente de conección al servicio 
-rds = boto3.client('rds')    # creamos un objeto cliente de conección al servicio 
+ec2 = boto3.client('ec2')    # creamos un objeto cliente de conexión al servicio EC2
+iam = boto3.client('iam')    # creamos un objeto cliente de conexión al servicio 
+s3 = boto3.client('s3')    # creamos un objeto cliente de conexión al servicio 
+rds = boto3.client('rds')    # creamos un objeto cliente de conexión al servicio 
 
 path_reporte = "/home/tfmaudit/Downloads/Reporte_audit.txt"    # definimos el path donde almacenar el reporte en txt y lo almacenamos en la variable path_reporte
 path_json = "/home/tfmaudit/Downloads/Reporte_audit.json"  # definimos el path donde almacenar el reporte en json y lo almacenamos en la variable path_json
